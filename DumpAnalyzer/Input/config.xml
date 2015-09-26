@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <DumpFile></DumpFile>
+    <DumpsFolder>c:\workspace\dumps</DumpsFolder>
+    <RecursiveSearch>true</RecursiveSearch>
+    <Filters>
+        <Filter>
+            <ModuleName>module1</ModuleName>
+            <MethodName></MethodName>
+        </Filter>
+        <Filter>
+            <ModuleName>module2</ModuleName>
+            <MethodName></MethodName>
+        </Filter>
+    </Filters>
+    <RedmineUrl>http://redmine:12345/redmine</RedmineUrl>
+    <Project>project-name</Project>
+    <OpenTickets>false</OpenTickets>
+    <DefaultOwner>
+        <FirstName>Dina</FirstName>
+        <LastName>Goldshtein</LastName>
+    </DefaultOwner>
+    <Owners>
+        <OwnershipData>
+            <Filter>
+                <ModuleName>module1</ModuleName>
+                <MethodName></MethodName>
+            </Filter>
+            <Owner>
+                <FirstName>Mush</FirstName>
+                <LastName>HaShor</LastName>
+            </Owner>
+        </OwnershipData>
+        <OwnershipData>
+            <Filter>
+                <ModuleName>module2</ModuleName>
+                <MethodName></MethodName>
+            </Filter>
+            <Owner>
+                <FirstName>Shaltiel</FirstName>
+                <LastName>Kwak</LastName>
+            </Owner>
+        </OwnershipData>
+    </Owners>
+</Configuration>
