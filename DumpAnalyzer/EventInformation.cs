@@ -1,4 +1,5 @@
-﻿using Microsoft.Diagnostics.Runtime.Interop;
+﻿using Microsoft.Diagnostics.Runtime;
+using Microsoft.Diagnostics.Runtime.Interop;
 
 namespace DumpAnalyzer
 {
@@ -8,10 +9,11 @@ namespace DumpAnalyzer
         public uint ProcessId { get; set; }
         public uint ThreadId { get; set; }
         public string Description { get; set; }
+        public ClrException ClrException { get; set; }
 
         public override string ToString()
         {
-            return string.Format("{0} in thread {1}: {2}", Type, ThreadId, Description);
+            return string.Format("{0} in thread {1}: {2}", Type, ThreadId, ClrException != null ? ClrException.Message : Description);
         }
     }
 }

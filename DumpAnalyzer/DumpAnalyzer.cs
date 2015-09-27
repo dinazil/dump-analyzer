@@ -86,12 +86,20 @@ namespace DumpAnalyzer
                 throw new ApplicationException("Could not convert thread index " + threadIndex + " to thread ID: " + h);
             }
 
+            ClrException clrException = null;
+            if (IsThreadManaged(sysIds[0]))
+            {
+                ClrThread thread = _runtime.Threads.First(t => t.OSThreadId == sysIds[0]);
+                clrException = thread.CurrentException;
+            }
+
             return new EventInformation
                 {
                     Type = eventType,
                     Description = description.ToString(),
                     ProcessId = processId,
-                    ThreadId = sysIds[0]
+                    ThreadId = sysIds[0],
+                    ClrException = clrException
                 };
         }
 
