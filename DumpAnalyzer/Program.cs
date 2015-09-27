@@ -37,10 +37,10 @@ namespace DumpAnalyzer
             if (!string.IsNullOrEmpty(options.ConfigFile))
             {
                 // load config from file
-                var xs = new XmlSerializer(typeof (Configuration));
+                var xs = new XmlSerializer(typeof(Configuration));
                 using (var fs = new FileStream(options.ConfigFile, FileMode.Open))
                 {
-                    configuration = (Configuration) xs.Deserialize(fs);
+                    configuration = (Configuration)xs.Deserialize(fs);
                 }
             }
             else
@@ -117,7 +117,7 @@ namespace DumpAnalyzer
             string[] dumps;
             if (!string.IsNullOrEmpty(configuration.DumpFile))
             {
-                dumps = new[] {configuration.DumpFile};
+                dumps = new[] { configuration.DumpFile };
             }
             else
             {
@@ -190,7 +190,7 @@ namespace DumpAnalyzer
                 assignee = ownershipData.Owner;
             }
 
-            var author = new IdentifiableName {Id = _redmineManager.GetCurrentUser().Id};
+            var author = new IdentifiableName { Id = _redmineManager.GetCurrentUser().Id };
             IdentifiableName assignedTo =
                 _projectMembers.SingleOrDefault(pm => pm != null && pm.Name == assignee.Name) ??
                 _projectMembers.SingleOrDefault(pm => pm != null && pm.Name == configuration.DefaultOwner.Name);
@@ -220,11 +220,11 @@ namespace DumpAnalyzer
 
             var issue = new Issue
                 {
-                    Subject = subject,
+                    Subject = subject.Substring(0, Math.Min(subject.Length, 255)),
                     Description = description,
                     AssignedTo = assignedTo,
                     Author = author,
-                    Project = new IdentifiableName {Id = _project.Id},
+                    Project = new IdentifiableName { Id = _project.Id },
                 };
 
             _redmineManager.CreateObject(issue);
