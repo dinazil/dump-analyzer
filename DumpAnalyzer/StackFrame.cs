@@ -32,7 +32,7 @@
             {
                 return true;
             }
-            return MethodName.ToLower().Contains(filter.ToLower());
+            return MethodName.ToLower().Equals(filter.ToLower());
         }
 
         private bool MatchModuleName(string filter)
@@ -41,7 +41,7 @@
             {
                 return true;
             }
-            return ModuleName.ToLower().Contains(filter.ToLower());
+            return ModuleName.ToLower().Equals(filter.ToLower());
         }
     }
 }
