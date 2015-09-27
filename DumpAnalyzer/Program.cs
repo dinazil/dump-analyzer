@@ -153,12 +153,12 @@ namespace DumpAnalyzer
 
         private static void Process(string dump, Configuration configuration)
         {
-            Tuple<IList<StackFrame>, StackFrame, Filter> res = Analyze(dump, configuration);
+            var res = Analyze(dump, configuration);
             Report(res);
             OpenTicketIfNeeded(dump, res, configuration);
         }
 
-        private static void OpenTicketIfNeeded(string dump, Tuple<IList<StackFrame>, StackFrame, Filter> res,
+        private static void OpenTicketIfNeeded(string dump, DumpData res,
                                                Configuration configuration)
         {
             if (configuration.OpenTickets)
@@ -167,11 +167,11 @@ namespace DumpAnalyzer
             }
         }
 
-        private static void Report(Tuple<IList<StackFrame>, StackFrame, Filter> res)
+        private static void Report(DumpData res)
         {
-            foreach (StackFrame stackFrame in res.Item1)
+            foreach (StackFrame stackFrame in res.CallStack)
             {
-                if (stackFrame == res.Item2)
+                if (stackFrame == res.FrameOfInterest)
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
                 }
@@ -180,10 +180,10 @@ namespace DumpAnalyzer
             }
         }
 
-        private static void OpenTicket(string dump, Tuple<IList<StackFrame>, StackFrame, Filter> res,
+        private static void OpenTicket(string dump, DumpData res,
                                        Configuration configuration)
         {
-            OwnershipData ownershipData = configuration.Owners.FirstOrDefault(o => o.Filter == res.Item3);
+            OwnershipData ownershipData = configuration.Owners.FirstOrDefault(o => o.Filter == res.FilterOfInterest);
             Owner assignee = configuration.DefaultOwner;
             if (ownershipData != null)
             {
@@ -199,14 +199,24 @@ namespace DumpAnalyzer
                 // TODO: do something about this?
             }
 
-            const string subject = "Investigate a dump";
-
+            string subject = "Unexpected exception occurred";
             string description =
-                string.Format(
-                    "Please investigate a dump located at {0}.{1}{2}Here's the call stack for the last event:{3}{4}",
+                string.Format("Please investigate a dump located at {0}.{1}{2}Here's the call stack for the last event:{3}{4}",
                     dump,
                     Environment.NewLine, Environment.NewLine, Environment.NewLine,
-                    string.Join(Environment.NewLine, res.Item1));
+                    string.Join(Environment.NewLine, res.CallStack));
+
+            if (res.FrameOfInterest != null)
+            {
+                subject = string.Format("A problem occurred in {0}.{1}: {2}",
+                res.FrameOfInterest.ModuleName, res.FrameOfInterest.MethodName, res.LastEvent.Description);
+
+                description = string.Format("There was a problem in {0}: {1}.{2}Please investigate a dump located at {3}.{4}{5}Here's the call stack for the last event:{6}{7}",
+                    res.FrameOfInterest.ModuleName, res.LastEvent, Environment.NewLine,
+                    dump,
+                    Environment.NewLine, Environment.NewLine, Environment.NewLine,
+                    string.Join(Environment.NewLine, res.CallStack));
+            }
 
             var issue = new Issue
                 {
@@ -220,7 +230,7 @@ namespace DumpAnalyzer
             _redmineManager.CreateObject(issue);
         }
 
-        private static Tuple<IList<StackFrame>, StackFrame, Filter> Analyze(string dump, Configuration configuration)
+        private static DumpData Analyze(string dump, Configuration configuration)
         {
             using (var da = new DumpAnalyzer(dump))
             {
@@ -228,7 +238,7 @@ namespace DumpAnalyzer
                 IList<StackFrame> st = da.GetStackTrace(lastEvent.ThreadId);
                 StackFrame frame = st.FirstOrDefault(f => configuration.Filters.Any(f.Match));
                 Filter filter = frame == null ? null : configuration.Filters.First(frame.Match);
-                return Tuple.Create(st, frame, filter);
+                return new DumpData { LastEvent = lastEvent, CallStack = st, FilterOfInterest = filter, FrameOfInterest = frame };
             }
         }
     }
