@@ -18,7 +18,6 @@ namespace DumpAnalyzer
             _target = DataTarget.LoadCrashDump(dumpPath);
             _target.AppendSymbolPath(Environment.GetEnvironmentVariable("_NT_SYMBOL_PATH"));
 
-            Console.WriteLine("Architecture: {0}", _target.Architecture);
             if (_target.Architecture == Architecture.Amd64 && !Environment.Is64BitProcess)
             {
                 throw new ApplicationException("Architecture doesn't match. Run this with X64 version.");
@@ -27,7 +26,6 @@ namespace DumpAnalyzer
             if (_target.ClrVersions.Count > 0)
             {
                 ClrInfo dacVersion = _target.ClrVersions[0];
-                Console.WriteLine("CLR Version: {0}", dacVersion.Version);
 
                 string dacLocation = dacVersion.TryDownloadDac();
 
