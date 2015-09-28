@@ -127,12 +127,13 @@ namespace DumpAnalyzer
                 dumps = Directory.GetFiles(configuration.DumpsFolder, "*.dmp", searchOptions);
             }
 
+            List<DumpData> dumpsData = new List<DumpData>();
+
             int counter = 1;
             foreach (string d in dumps)
             {
                 try
                 {
-                    List<DumpData> dumpsData = new List<DumpData>();
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("Analyzing {0}/{1}: {2}", counter++, dumps.Length, d);
                     Console.ResetColor();
@@ -149,7 +150,14 @@ namespace DumpAnalyzer
                     Console.WriteLine("Press <Enter> to continue...");
                     Console.ReadLine();
                 }
+
+                ReportStatistics(dumpsData);
             }
+        }
+
+        private static void ReportStatistics(List<DumpData> dumpsData)
+        {
+            throw new NotImplementedException();
         }
 
         private static DumpData Process(string dump, Configuration configuration)
