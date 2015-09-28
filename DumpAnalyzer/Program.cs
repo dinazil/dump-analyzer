@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using CommandLine;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using System.Diagnostics;
 
 namespace DumpAnalyzer
 {
@@ -20,6 +21,7 @@ namespace DumpAnalyzer
 
         private static void Main(string[] args)
         {
+            var sw = Stopwatch.StartNew();
             var options = new ProgramOptions();
             if (!Parser.Default.ParseArguments(args, options))
             {
@@ -61,6 +63,8 @@ namespace DumpAnalyzer
             }
 
             Process(configuration);
+
+            Console.WriteLine("Time to process: {0}", sw.Elapsed);
         }
 
         private static bool GetProjectDetailsIfNeeded(Configuration configuration)
@@ -150,14 +154,35 @@ namespace DumpAnalyzer
                     Console.WriteLine("Press <Enter> to continue...");
                     Console.ReadLine();
                 }
-
-                ReportStatistics(dumpsData);
             }
+
+            ReportStatistics(dumpsData);
         }
 
         private static void ReportStatistics(List<DumpData> dumpsData)
         {
-            throw new NotImplementedException();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            ReportByModule(dumpsData);
+            Console.ResetColor();
+        }
+
+        private static void ReportByModule(List<DumpData> dumpsData)
+        {
+            var moduleCount = from d in dumpsData
+                              where d.FrameOfInterest != null
+                              group d by d.FrameOfInterest.ModuleName into module
+                              let count = module.Count()
+                              orderby count descending
+                              select new { Module = module.Key, Count = count };
+                               
+            using (var tp = new TablePrinter(50, "Module Name", "#Problems"))
+            {
+                foreach (var mc in moduleCount)
+                {
+                    tp.WriteRow(new object[] { mc.Module, mc.Count });
+                }
+                tp.WriteRow(new object[] { "--Unexpected--", dumpsData.Count(d => d.FrameOfInterest == null) });
+            }
         }
 
         private static DumpData Process(string dump, Configuration configuration)
