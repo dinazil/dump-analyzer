@@ -86,6 +86,7 @@
     <Compile Include="ProgramOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StackFrame.cs" />
+    <Compile Include="TablePrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="dbglibs\x64\dbghelp.dll" />
