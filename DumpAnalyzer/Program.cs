@@ -132,10 +132,11 @@ namespace DumpAnalyzer
             {
                 try
                 {
+                    List<DumpData> dumpsData = new List<DumpData>();
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("Analyzing {0}/{1}: {2}", counter++, dumps.Length, d);
                     Console.ResetColor();
-                    Process(d, configuration);
+                    dumpsData.Add(Process(d, configuration));
                 }
                 catch (Exception e)
                 {
@@ -151,11 +152,12 @@ namespace DumpAnalyzer
             }
         }
 
-        private static void Process(string dump, Configuration configuration)
+        private static DumpData Process(string dump, Configuration configuration)
         {
             var res = Analyze(dump, configuration);
             Report(res);
             OpenTicketIfNeeded(dump, res, configuration);
+            return res;
         }
 
         private static void OpenTicketIfNeeded(string dump, DumpData res,
