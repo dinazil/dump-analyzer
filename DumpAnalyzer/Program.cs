@@ -138,16 +138,18 @@ namespace DumpAnalyzer
             {
                 try
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("Analyzing {0}/{1}: {2}", counter++, dumps.Length, d);
-                    Console.ResetColor();
+                    using (new ConsoleForegroundFormatter(ConsoleColor.Cyan))
+                    {
+                        Console.WriteLine("Analyzing {0}/{1}: {2}", counter++, dumps.Length, d);
+                    }
                     dumpsData.Add(Process(d, configuration));
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Error.WriteLine("Error while analyzing {0}: {1}", d, e);
-                    Console.ResetColor();
+                    using (new ConsoleForegroundFormatter(ConsoleColor.Red))
+                    {
+                        Console.Error.WriteLine("Error while analyzing {0}: {1}", d, e);
+                    }
                 }
                 if (!configuration.OpenTickets)
                 {
@@ -161,9 +163,11 @@ namespace DumpAnalyzer
 
         private static void ReportStatistics(List<DumpData> dumpsData)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            ReportByModule(dumpsData);
-            Console.ResetColor();
+            using (new ConsoleForegroundFormatter(ConsoleColor.Cyan))
+            {
+                Console.WriteLine();
+                ReportByModule(dumpsData);
+            }
         }
 
         private static void ReportByModule(List<DumpData> dumpsData)
@@ -174,7 +178,7 @@ namespace DumpAnalyzer
                               let count = module.Count()
                               orderby count descending
                               select new { Module = module.Key, Count = count };
-                               
+
             using (var tp = new TablePrinter(50, "Module Name", "#Problems"))
             {
                 foreach (var mc in moduleCount)

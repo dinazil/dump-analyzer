@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
+    <Compile Include="ConsoleForegroundFormatter.cs" />
     <Compile Include="DumpAnalyzer.cs" />
     <Compile Include="DumpData.cs" />
     <Compile Include="EventInformation.cs" />
