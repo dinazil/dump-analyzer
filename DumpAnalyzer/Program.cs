@@ -240,10 +240,10 @@ namespace DumpAnalyzer
 
             string subject = "Unexpected exception occurred";
             string description =
-                string.Format("Please investigate a dump located at {0}.{1}{2}Here's the call stack for the last event:{3}{4}",
+                string.Format("Please investigate a dump located at {0}.{1}{2}Here's the beginning of the call stack for the last event:{3}{4}",
                     dump,
                     Environment.NewLine, Environment.NewLine, Environment.NewLine,
-                    string.Join(Environment.NewLine, res.CallStack));
+                    string.Join(Environment.NewLine, res.CallStack.Take(Math.Min(res.CallStack.Count, 30))));
 
             if (res.FrameOfInterest != null)
             {
@@ -254,7 +254,7 @@ namespace DumpAnalyzer
                     res.FrameOfInterest.ModuleName, res.LastEvent, Environment.NewLine,
                     dump,
                     Environment.NewLine, Environment.NewLine, Environment.NewLine,
-                    string.Join(Environment.NewLine, res.CallStack));
+                    string.Join(Environment.NewLine, res.CallStack.Take(Math.Min(res.CallStack.Count, 30))));
             }
 
             var issue = new Issue
@@ -275,7 +275,7 @@ namespace DumpAnalyzer
             {
                 EventInformation lastEvent = da.GetLastEvent();
                 IList<StackFrame> st = da.GetStackTrace(lastEvent.ThreadId);
-                StackFrame frame = st.FirstOrDefault(f => configuration.Filters.Any(f.Match));
+                StackFrame frame = st.FirstOrDefault(f => !configuration.Ignores.Any(f.Match) && configuration.Filters.Any(f.Match));
                 Filter filter = frame == null ? null : configuration.Filters.First(frame.Match);
                 return new DumpData { LastEvent = lastEvent, CallStack = st, FilterOfInterest = filter, FrameOfInterest = frame };
             }

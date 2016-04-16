@@ -13,6 +13,8 @@ namespace DumpAnalyzer
 
         public List<Filter> Filters { get; set; }
 
+        public List<Filter> Ignores { get; set; }
+
         public string RedmineUrl { get; set; }
 
         public bool OpenTickets { get; set; }

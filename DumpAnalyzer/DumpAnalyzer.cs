@@ -16,7 +16,7 @@ namespace DumpAnalyzer
         public DumpAnalyzer(string dumpPath)
         {
             _target = DataTarget.LoadCrashDump(dumpPath);
-            _target.AppendSymbolPath(Environment.GetEnvironmentVariable("_NT_SYMBOL_PATH"));
+            _target.SymbolLocator.SymbolPath = Environment.GetEnvironmentVariable("_NT_SYMBOL_PATH");
 
             if (_target.Architecture == Architecture.Amd64 && !Environment.Is64BitProcess)
             {
@@ -26,15 +26,9 @@ namespace DumpAnalyzer
             if (_target.ClrVersions.Count > 0)
             {
                 ClrInfo dacVersion = _target.ClrVersions[0];
-
-                string dacLocation = dacVersion.TryDownloadDac();
-
-                if (string.IsNullOrEmpty(dacLocation))
-                {
-                    throw new FileNotFoundException("DAC library could not be found");
-                }
-
-                _runtime = _target.CreateRuntime(dacLocation);
+                _runtime = dacVersion.CreateRuntime();
+                // CreateRuntime() tries to find the DAC on disk and then consults
+                // the symbol server if necessary. If all fails, it throws an exception.
             }
         }
 
