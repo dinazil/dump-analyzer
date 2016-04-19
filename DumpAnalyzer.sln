@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DumpAnalyzer", "DumpAnalyzer\DumpAnalyzer.csproj", "{3B6AF201-5923-43AF-961E-2E474A95B98B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9D35C755-FFB7-4A07-89C0-BB6B0C1850B8}"
@@ -9,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{9D35C7
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessProbe", "ProcessProbe\ProcessProbe.csproj", "{53257856-A461-48CE-A4AF-F1D49121FED8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThreadedProgram", "ThreadedProgram\ThreadedProgram.csproj", "{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +32,22 @@ Global
 		{3B6AF201-5923-43AF-961E-2E474A95B98B}.Release|x64.Build.0 = Release|x64
 		{3B6AF201-5923-43AF-961E-2E474A95B98B}.Release|x86.ActiveCfg = Release|x86
 		{3B6AF201-5923-43AF-961E-2E474A95B98B}.Release|x86.Build.0 = Release|x86
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Debug|x64.Build.0 = Debug|Any CPU
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Debug|x86.ActiveCfg = Debug|x86
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Debug|x86.Build.0 = Debug|x86
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Release|x64.ActiveCfg = Release|Any CPU
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Release|x64.Build.0 = Release|Any CPU
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Release|x86.ActiveCfg = Release|x86
+		{53257856-A461-48CE-A4AF-F1D49121FED8}.Release|x86.Build.0 = Release|x86
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Debug|x64.Build.0 = Debug|Any CPU
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Debug|x86.ActiveCfg = Debug|x86
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Debug|x86.Build.0 = Debug|x86
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Release|x64.ActiveCfg = Release|Any CPU
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Release|x64.Build.0 = Release|Any CPU
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Release|x86.ActiveCfg = Release|x86
+		{01BC18D1-C48E-44B4-ABDE-6ACF5431C10F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
