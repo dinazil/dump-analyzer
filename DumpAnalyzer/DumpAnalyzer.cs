@@ -10,10 +10,10 @@ namespace DumpAnalyzer
 {
     internal class DumpAnalyzer : IDisposable
     {
-        private readonly ClrRuntime _runtime;
-        private readonly DataTarget _target;
+        private ClrRuntime _runtime;
+        private DataTarget _target;
 
-        public DumpAnalyzer(string dumpPath)
+        public void Load(string dumpPath)
         {
             _target = DataTarget.LoadCrashDump(dumpPath);
             _target.SymbolLocator.SymbolPath = Environment.GetEnvironmentVariable("_NT_SYMBOL_PATH");
@@ -34,7 +34,7 @@ namespace DumpAnalyzer
 
         public void Dispose()
         {
-            _target.DebuggerInterface.EndSession(DEBUG_END.PASSIVE);
+            _target.Dispose();
         }
 
         public void ThreadWalk(Action<ClrThread> action)
@@ -64,7 +64,6 @@ namespace DumpAnalyzer
             int h = debugControl.GetLastEventInformation(out eventType, out processId, out threadIndex, extraInformation,
                                                          extraInformationSize, out extraInformationUsed, description,
                                                          descriptionSize, out descriptionUsed);
-
             if (h != 0)
             {
                 throw new ApplicationException("Could not retrieve last event information: " + h);
@@ -124,7 +123,7 @@ namespace DumpAnalyzer
         private IList<StackFrame> GetNativeStackTrace(uint threadId)
         {
             var debugControl = (IDebugControl) _target.DebuggerInterface;
-            var symbols = (IDebugSymbols) _target.DebuggerInterface;
+            var symbols = (IDebugSymbols3) _target.DebuggerInterface;
             var systemObjects = (IDebugSystemObjects) _target.DebuggerInterface;
 
             const int framesSize = 1024;
@@ -134,6 +133,11 @@ namespace DumpAnalyzer
             uint engineThreadId;
             systemObjects.GetThreadIdBySystemId(threadId, out engineThreadId);
             systemObjects.SetCurrentThreadId(engineThreadId);
+            
+            // IMPORTANT: Needed nly if this is the exception thread, which is the underlying 
+            // assumption of DumpAnalyzer
+            symbols.SetScopeFromStoredEvent();
+
             debugControl.GetStackTrace(0, 0, 0, frames, framesSize, out framesFilled);
 
             var stackTrace = new List<StackFrame>();

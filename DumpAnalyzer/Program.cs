@@ -271,8 +271,9 @@ namespace DumpAnalyzer
 
         private static DumpData Analyze(string dump, Configuration configuration)
         {
-            using (var da = new DumpAnalyzer(dump))
+            using (var da = new DumpAnalyzer())
             {
+                da.Load(dump);
                 EventInformation lastEvent = da.GetLastEvent();
                 IList<StackFrame> st = da.GetStackTrace(lastEvent.ThreadId);
                 StackFrame frame = st.FirstOrDefault(f => !configuration.Ignores.Any(f.Match) && configuration.Filters.Any(f.Match));
